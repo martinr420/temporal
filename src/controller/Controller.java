@@ -1,124 +1,117 @@
 package controller;
-/*
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * University of the Andes
- * Department of Systems Engineering
- * Licensed under Academic Free License version 2.1
- * Lab 0: Sample
- * Author: Andy Ortiz
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
 
-
-// -------------------------------------------------------------
-// Imports
-// -------------------------------------------------------------
-
-import model.logic.Model;
-import view.View;
-
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import model.data_structures.Nodo;
+import model.data_structures.noExisteObjetoException;
+import model.logic.Model;
+import model.logic.Multa;
+import view.View;
 
-
-/**
- * Controller class to render the view and update the model.
- */
 public class Controller {
-    // -------------------------------------------------------------
-    // Attributes
-    // -------------------------------------------------------------
 
-    /**
-     * A model.
-     */
-    private Model model;
 
-    /**
-     * A view.
-     */
-    private View view;
+	// -------------------------------------------------------------
+	// Attributes
+	// -------------------------------------------------------------
 
-    // -------------------------------------------------------------
-    // Constructor
-    // -------------------------------------------------------------
+	/**
+	 * A model.
+	 */
+	private Model modelo;
 
-    /**
-     * Creates the project view and the project model
-     */
-    public Controller() {
-        model = new Model();
-        view = new View();
-    }
+	/**
+	 * A view.
+	 */
+	private View view;
 
-    // -------------------------------------------------------------
-    // Methods
-    // -------------------------------------------------------------
+	// -------------------------------------------------------------
+	// Constructor
+	// -------------------------------------------------------------
 
-    /**
-     * Prints the user options and updates the view using the model.
-     *
-     * @throws InputMismatchException If the user inputs an incorrect number sequence.
-     */
-    public void run() throws InputMismatchException {
-        try {
-            Scanner reader = new Scanner(System.in);
-            boolean end = false;
+	/**
+	 * Creates the project view and the project model
+	 */
+	public Controller() {
+		modelo = new Model();
+		view = new View();
+	}
 
-            while (!end) {
-                view.displayMenu();
-                int option = reader.nextInt();
-                switch (option) {
+	// -------------------------------------------------------------
+	// Methods
+	// -------------------------------------------------------------
 
-                    case 0:
-                        // Display option 0
-                        view.displayOp0Menu();
+	/**
+	 * Prints the user options and updates the view using the model.
+	 *
+	 * @throws InputMismatchException If the user inputs an incorrect number sequence.
+	 * @throws noExisteObjetoException 
+	 */
+	public void run() throws InputMismatchException, noExisteObjetoException {
+		try {
+			modelo.cargarDatos();
+			Scanner reader = new Scanner(System.in);
+			boolean end = false;
 
-                        // read name from input
-                        String name = reader.next();
+			while (!end) {
+				view.displayMenu();
+				
+				int option = reader.nextInt();
+				switch (option) {
 
-                        // set name in model
-                        model.setName(name);
+				case 0:
+					
+					
+					modelo.darInfoCargaDatos();
 
-                        // display name in view
-                        view.displayOp0Data(name);
-                        break;
+					
+					
+					
+					break;
 
-                    case 1:
-                        // Display option 1
-                        view.displayOp1Menu();
+				case 1:
+					// Display option 1
+					view.displayOp1Menu();
+					
+					
+					
+					break;
 
-                        // read age from input
-                        int age = reader.nextInt();
+				case 2:
+					view.displayOp2Menu();
+					
+					
+					
 
-                        // set age in model
-                        model.setAge(age);
+					break;
+					
+				case 3:
+					view.displayOp3Menu();
+				
+					view.displayOp3Menu();
+					
+					break;
+					
+					
+				case 4:
+					view.displayOp4Menu();
+					
+					view.displayOp4Menu();
+					break;
 
-                        // display age in view
-                        view.displayOp1Data(age);
-                        break;
+					// Invalid option
+				default:
+					view.badOption();
+					end = true;
+					break;
+				}
+			}
+		} 
+		catch (InputMismatchException e)
+		{
+			run();
+		}
+	}
 
-                    case 2:
-                        // Display option 2
-                        view.displayOp2Menu();
-
-                        // get info from model
-                        String info = model.getName()+"-"+model.getAge();
-
-                        // display info in view
-                        view.displayOp2Data(info);
-
-                        break;
-
-                    // Invalid option
-                    default:
-                        view.badOption();
-                        end = true;
-                        break;
-                }
-            }
-        } catch (InputMismatchException e) {
-            run();
-        }
-    }
 }

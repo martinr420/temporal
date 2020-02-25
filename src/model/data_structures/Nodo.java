@@ -1,8 +1,12 @@
 package model.data_structures;
 
-public class Nodo<K> 
+import java.util.Iterator;
+
+public class Nodo<K> implements Iterator<Nodo<K>>
 {
+
 	private K generico;
+	
 	private Nodo<K> siguiente;
 	
 	private Nodo<K> anterior;
@@ -53,6 +57,18 @@ public class Nodo<K>
 	public K darGenerico()
 	{
 		return generico;
+	}
+
+
+	public boolean hasNext() {
+		// TODO Auto-generated method stub
+		return this.siguiente != null;
+	}
+
+
+	public Nodo<K> next() {
+		// TODO Auto-generated method stub
+		return this.siguiente;
 	}
 	
 

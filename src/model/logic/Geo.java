@@ -9,6 +9,22 @@ public class Geo {
 	public String tipo;
 	
 	
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public double[] getCoordenadas() {
+		return coordenadas;
+	}
+
+	public void setCoordenadas(double[] coordenadas) {
+		this.coordenadas = coordenadas;
+	}
+
 	public double[] coordenadas;
 	
 	

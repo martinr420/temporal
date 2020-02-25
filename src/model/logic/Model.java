@@ -10,11 +10,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
-import model.data_structures.ArregloDinamico;
-import model.data_structures.IArregloDinamico;
+
 import model.data_structures.IListaDoblementeEncadenada;
-import model.data_structures.ListaEncadenada;
-import model.data_structures.ListaEncadenada.IteratorLista;
+import model.data_structures.ListaDoblementeEncadenada;
+import model.data_structures.ListaDoblementeEncadenada.IteratorLista;
 import model.data_structures.Nodo;
 import model.data_structures.noExisteObjetoException;
 
@@ -34,7 +33,7 @@ public class Model {
 	 */
 	public Model()
 	{
-		datos = new ListaEncadenada<Multa>();
+		datos = new ListaDoblementeEncadenada<Multa>();
 		
 	}
 
@@ -47,9 +46,9 @@ public class Model {
 //		//datos = new ArregloDinamico(capacidad);
 //	}
 	
-	public ListaEncadenada<Multa> darDatos()
+	public ListaDoblementeEncadenada<Multa> darDatos()
 	{
-		return (ListaEncadenada<Multa>) datos;
+		return (ListaDoblementeEncadenada<Multa>) datos;
 	}
 
 	/**
@@ -65,7 +64,7 @@ public class Model {
 	 * Requerimiento de agregar dato
 	 * @param dato
 	 */
-	public void agregar(Nodo<Multa> dato)
+	public void agregar(Multa dato)
 	{	
 		datos.agregarNodoAlFinal(dato);;
 	}
@@ -76,7 +75,7 @@ public class Model {
 	 * @return dato encontrado
 	 * @throws noExisteObjetoException 
 	 */
-	public int buscarPosicion(Nodo<Multa> dato) throws noExisteObjetoException
+	public int buscarPosicion(Multa dato) throws noExisteObjetoException
 	{
 		return datos.darPosicionNodo(dato);
 	}
@@ -87,7 +86,7 @@ public class Model {
 	 * @return dato eliminado
 	 * @throws noExisteObjetoException 
 	 */
-	public Nodo<Multa> eliminar(Nodo<Multa> dato) throws noExisteObjetoException
+	public Multa eliminar(Multa dato) throws noExisteObjetoException
 	{
 		return datos.EliminarNodoObj(dato);
 	}
@@ -101,7 +100,7 @@ public class Model {
 		try {
 
 
-			ListaEncadenada<Multa> listaMultas = new ListaEncadenada<>();
+			ListaDoblementeEncadenada<Multa> listaMultas = new ListaDoblementeEncadenada<>();
 
 
 			lector = new JsonReader(new FileReader(path));
@@ -150,8 +149,8 @@ public class Model {
 				Multa multa = new Multa(id, fecha, medioDete, claseVehiculo, tipoServicio, infraccion, descripcion, localidad, geometria);
 
 
-				Nodo<Multa> nMulta = new Nodo<Multa>(multa);
-				datos.agregarNodoAlFinal(nMulta);
+				
+				datos.agregarNodoAlFinal(multa);
 
 			} //llave for grande
 
@@ -160,22 +159,55 @@ public class Model {
 		{
 			e.printStackTrace();
 		}
+		
 
 
 	} //llave metodo
+	
+	
+	public void darInfoCargaDatos() throws noExisteObjetoException
+	{
+		
+		cargarDatos();
+		System.out.println("La cantidad de comparendos es de: "+datos.darTamano());
+		System.out.println("EL comparendo con el ID mas alto es :" + BuscarComparendoIDMasAlto().toString());
+		System.out.println("El minimax es: ");
+		System.out.println("longitud minima: " + darMinimax()[0]);
+		System.out.println("longitud maxima: " + darMinimax()[1]);
+		System.out.println("latitud minima: " + darMinimax()[2]);
+		System.out.println("latitud maxima:" + darMinimax()[3]);
+		
+		
+	}
 
+
+	private Multa BuscarComparendoIDMasAlto() 
+	{
+		Nodo<Multa> actual = (Nodo<Multa>) datos.iterator();
+		Multa laMulta = new Multa(-1, "", "", "", "", "", "","", null);
+		
+		while(actual.hasNext())
+		{
+			if(actual.darGenerico().getId() > laMulta.getId() )
+			{
+				laMulta = actual.darGenerico();
+			}
+		}
+		return laMulta;
+	}
 
 	public Multa buscarComparendoPorId(long pID)
 	{
 		boolean parar = false;
 		Multa laMulta = null;
-		Nodo<Multa> actual = datos.darPrimero();
-		while(actual.darSiguiente() != null && !parar)
+		Nodo<Multa> actual = (Nodo<Multa>) datos.iterator();
+		while(actual.hasNext() && !parar)
 		{
 			if(actual.darGenerico().getId() == pID)
 			{
 				parar = true;
 				laMulta = actual.darGenerico();
+				actual = actual.next();
 
 			}
 		}
@@ -184,19 +216,67 @@ public class Model {
 		return laMulta;
 	}
 	
-	public int darTotalComparendos()
-	{
-		return 0;
-	}
 	
-	public Multa darComparendoMayorID()
+	public double[] darMinimax()
 	{
-		return null;
-	}
-	
-	public ArrayList<Integer> darMinimax()
-	{
-		return null;
+		/*
+		 * arreglo [0] = latitud minima 
+		 * arreglo [1] = latitud maxima
+		 * arreglo [2] = longitud minima 
+		 * arreglo [3] = longitud maxima
+		 */
+		
+		
+		
+		double[] arreglo = new double[4];
+		
+		double longitudMin = 180; // inicializada en el valor maximo que puede tener la longitud
+
+		double longitudMax = -180; // inicializada en el valor minimo que puede tener la longitud
+		
+		double latitudMin = 90; // inicializada en el valor maximo que puede tener la latitud
+		
+		double latitudMax = -90; // inicializada en el valor minimo que puede tener la latitud 
+		
+		
+		
+		
+		IteratorLista lista = (IteratorLista) datos.iterator();
+		
+		while(lista.hasNext())
+		{
+			Multa laMulta = (Multa) lista.next();
+			double longitud = laMulta.getGeo().getCoordenadas()[0];
+			
+			double latitud = laMulta.getGeo().getCoordenadas()[1];
+			if(longitud < longitudMin)
+			{
+				longitudMin = longitud;
+			}
+			if(longitud > longitudMax)
+			{
+				longitudMax = longitud;
+			}
+			
+			if(latitud < latitudMin)
+			{
+				latitudMin = latitud;
+			}
+			if(latitud > latitudMax)
+			{
+				latitudMax = latitud;
+			}
+		}
+		
+		arreglo[0] = longitudMin;
+		arreglo[1] = longitudMax;
+		arreglo[2] = latitudMin;
+		arreglo[3] = latitudMax;
+		
+		
+		
+		
+		return arreglo;
 	}
 	
 	
