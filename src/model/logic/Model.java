@@ -183,14 +183,17 @@ public class Model {
 
 	private Multa BuscarComparendoIDMasAlto() 
 	{
-		Nodo<Multa> actual = (Nodo<Multa>) datos.iterator();
+
+		IteratorLista lista = (IteratorLista) datos.iterator();
 		Multa laMulta = new Multa(-1, "", "", "", "", "", "","", null);
 		
-		while(actual.hasNext())
+		while(lista.hasNext())
 		{
-			if(actual.darGenerico().getId() > laMulta.getId() )
+			Multa iterNodo =  (Multa) lista.next();
+			
+			if(iterNodo.getId() > laMulta.getId() )
 			{
-				laMulta = actual.darGenerico();
+				laMulta = iterNodo;
 			}
 		}
 		return laMulta;
@@ -280,9 +283,13 @@ public class Model {
 	}
 	
 	
-	public Multa darComparendoLocalidad()
+	public Multa darComparendoLocalidad(String pLocalidad)
 	{
-		return null;
+		Multa laMulta = null;
+		IteratorLista iter = (IteratorLista) datos.iterator();
+		
+		
+		return laMulta;
 	}
 	
 	public ArrayList<Multa> darMultasComparacion(String fecha1, String fecha2)

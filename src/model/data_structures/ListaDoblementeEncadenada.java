@@ -27,8 +27,8 @@ public class ListaDoblementeEncadenada<K> implements IListaDoblementeEncadenada<
 	@Override
 	public Iterator<K> iterator() {
 		// TODO Auto-generated method stub
-		IteratorLista lista = new IteratorLista();
-		return lista ;
+		IteratorLista<K> iterador = new IteratorLista<K>();
+		return iterador ;
 	}
 
 	@Override
@@ -339,21 +339,28 @@ public class ListaDoblementeEncadenada<K> implements IListaDoblementeEncadenada<
 		return lista;
 	}
 
-	public class IteratorLista implements Iterator<K>
+	public class IteratorLista<K> implements Iterator<K>
 	{
 
-		Nodo<K> actual = null;
-		int num = -1;
+		private Nodo<K> actual;
+		private boolean itero;
+
+		public IteratorLista() 
+		{
+			itero = false;
+			actual = (Nodo<K>) primero;
+			// TODO Auto-generated constructor stub
+		}
 		@Override
 		public boolean hasNext() {
-			if(num == -1)
+			if(!itero)
 			{
-				return primero != null;
+				return actual != null;
 			}
 
 			else
 			{
-				return actual != null;
+				return actual.darSiguiente() != null;
 			}
 
 		}
@@ -361,10 +368,10 @@ public class ListaDoblementeEncadenada<K> implements IListaDoblementeEncadenada<
 		@Override
 		public K next() {
 
-			if(num == -1)
+			if(!itero)
 			{
-				actual = primero; 
-				num++;
+				itero = true; 
+				
 			}
 			else
 			{

@@ -8,5 +8,7 @@ public class Main {
 	{
 		Controller controler = new Controller();
 		controler.run();
+		
+		
 	}
 }
